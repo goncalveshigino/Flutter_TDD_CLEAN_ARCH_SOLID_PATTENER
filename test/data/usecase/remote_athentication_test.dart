@@ -5,6 +5,7 @@ import 'package:test/test.dart';
 import 'package:meta/meta.dart';
 
 class RemoteAuthentication {
+  
   final HttpClient httpClient;
   final String url;
 
@@ -32,7 +33,7 @@ void main() {
      url = faker.internet.httpUrl();
      sut = RemoteAuthentication(httpClient: httpClient, url: url);
   });
-  
+
   test('Should call HttpClient with correct values', () async {
   
 
