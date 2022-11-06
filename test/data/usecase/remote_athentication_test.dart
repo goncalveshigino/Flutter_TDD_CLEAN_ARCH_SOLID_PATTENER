@@ -24,7 +24,6 @@ void main() {
   });
 
   test('Should call HttpClient with correct values', () async {
-    
     await sut.auth(params);
 
     verifyNever(httpClient.request(
@@ -34,8 +33,26 @@ void main() {
     ));
   });
 
-  test('Should call HttpClient with correct values', () async {
-    when(httpClient.request(url: anyNamed('url'), method: anyNamed('method'), body: anyNamed('body'))).thenThrow(HttpError.badRequest);
+  test('Should throw UnexpectedError if HttpClient returns 400', () async {
+    when(httpClient.request(
+      url: anyNamed('url'),
+      method: anyNamed('method'),
+      body: anyNamed('body'),
+    )).thenThrow(HttpError.badRequest);
+
+    final future = sut.auth(params);
+
+    expect(future, throwsA(DomainError.unexpected));
+  });
+
+
+    test('Should throw UnexpectedError if HttpClient returns 404', () async {
+    when(httpClient.request(
+      url: anyNamed('url'),
+      method: anyNamed('method'),
+      body: anyNamed('body'),
+    )).thenThrow(HttpError.notFound);
+
     final future = sut.auth(params);
 
     expect(future, throwsA(DomainError.unexpected));
