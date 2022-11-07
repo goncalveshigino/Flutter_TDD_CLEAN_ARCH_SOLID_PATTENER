@@ -4,36 +4,32 @@ import 'package:http/http.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-
 class HttpAdapter {
-
   final Client client;
 
-   HttpAdapter(this.client);
+  HttpAdapter(this.client);
 
-  Future<void> request({
-    @required String url,
-    @required String method
-  }) async {
-     await client.post(Uri.parse(url));
+  Future<void> request({@required String url, @required String method}) async {
+    final headers = {
+      'content-type': 'application/json',
+      'accept': 'application/json',
+    };
+    await client.post(Uri.parse(url), headers: headers);
   }
 }
 
-
 class ClientSpy extends Mock implements Client {}
 
-void main(){
- 
- group('post', () {
-  test('Should call post with correct values', () async {
-     final client = ClientSpy();
-     final sut = HttpAdapter(client);
-     final url = faker.internet.httpUrl();
+void main() {
+  group('post', () {
+    test('Should call post with correct values', () async {
+      final client = ClientSpy();
+      final sut = HttpAdapter(client);
+      final url = faker.internet.httpUrl();
 
-     await sut.request(url: url, method: 'post');
+      await sut.request(url: url, method: 'post');
 
-     verify(client.post(Uri.parse(url)));
-
+      verify(client.post(Uri.parse(url), headers: {'content-type': 'application/json', 'accept': 'application/json'}));
+    });
   });
- });
 }
